@@ -3,13 +3,12 @@ package com.example.sentimental_analyzer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import com.example.sentimental_analyzer.firestore_sefrvices.FireStoreService;
+import com.example.sentimental_analyzer.firestore_sefrvices.retrieveData;
+import com.example.sentimental_analyzer.models.NotesModel;
 import com.example.sentimental_analyzer.models.UserModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -19,15 +18,13 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements retrieveData {
 
     GoogleSignInClient mGoogleSignInClient;
-    FireStoreService fireStoreService = new FireStoreService();
+    FireStoreService fireStoreService = new FireStoreService(this);
     private static int RC_SIGN_IN = 100;
 
     @Override
@@ -42,12 +39,21 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            updateUI(account);
+        }
 
         signInButton.setOnClickListener(view -> {
             Log.d("TAG", "signInFunc: Here is me");
             signInFunc();
         });
 
+    }
+
+    private void updateUI(GoogleSignInAccount account) {
+        Intent intent = new Intent(this, UserNotes.class);
+        intent.putExtra("userId", account.getId());
+        this.startActivity ( intent );
     }
 
     void signInFunc(){
@@ -66,28 +72,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> task) {
-        try {
-            GoogleSignInAccount account = task.getResult(ApiException.class);
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
 
-            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-            if (acct != null) {
-
-                UserModel userModel;
-                userModel = new UserModel(
-                        acct.getDisplayName(),
-                        acct.getEmail(),
-                        acct.getId(),
-                        acct.getPhotoUrl().toString()
-                        );
-                String Id = fireStoreService.putUser(userModel);
-                Intent intent = new Intent(this, create_note.class);
-                intent.putExtra("userId", Id);
-                this.startActivity ( intent );
-            }
-
-        } catch (ApiException e) {
-            Log.d("TAG", "handleSignInResult: " + e);
+            UserModel userModel;
+            userModel = new UserModel(
+                    acct.getDisplayName(),
+                    acct.getEmail(),
+                    acct.getId(),
+                    acct.getPhotoUrl().toString()
+                    );
+            fireStoreService.putUser(userModel);
+            Intent intent = new Intent(this, UserNotes.class);
+            intent.putExtra("userId", acct.getId());
+            this.startActivity ( intent );
         }
     }
 
+    @Override
+    public List<NotesModel> getUserNotes(List<NotesModel> list) {
+        return null;
+    }
 }

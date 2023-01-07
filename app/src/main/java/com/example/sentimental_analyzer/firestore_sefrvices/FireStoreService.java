@@ -13,30 +13,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FireStoreService {
+public class FireStoreService{
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<NotesModel> list = new ArrayList<>();
+    retrieveData getData;
 
-    public String putUser(UserModel userData){
-        String ID = db.collection("users")
-                .document()
-                .getId();
+    public FireStoreService(retrieveData getData) {
+        this.getData = getData;
+    }
+
+    public void putUser(UserModel userData){
+        String ID = userData.getUid();
 
         Map<String, Object> user = new HashMap<>();
         user.put("userName", userData.getUserName());
         user.put("userEmail", userData.getUserEmail());
-        user.put("userUid", userData.getUid());
-        user.put("docId", ID);
+        user.put("uid", ID);
         user.put("userPhoto", userData.getUserPhoto());
 
         db.collection("users")
                 .document(ID)
                 .set(user);
-        return ID;
     }
 
     public void getAllNotes(String uid){
-//        list = new ArrayList<>();
         db.collection("users")
                 .document("jkWgvyU5TsMnJwlv9sVQ")
                 .collection("notes")
@@ -47,19 +47,18 @@ public class FireStoreService {
                             Map<String, Object> notes = document.getData();
                             Log.d("Notes", "getAllNotes: " + notes);
                             list.add(new NotesModel(
-                                    notes.get("notesTitle").toString(),
-                                    notes.get("dateTime").toString(),
-                                    notes.get("uid").toString(),
-                                    notes.get("notesContent").toString()
+                                    (String) notes.get("notesTitle"),
+                                    (String) notes.get("dateTime"),
+                                    (String) notes.get("uid"),
+                                    (String) notes.get("notesContent")
                             ));
                         }
+                        getData.getUserNotes(list);
                     }
-                    Log.d("Notes", "getAllNotes: " + list.size());
                 });
     }
 
     public List<NotesModel> getList() {
-        Log.d("Notes", "get list notes: " + list.size());
         return list;
     }
 
@@ -77,4 +76,13 @@ public class FireStoreService {
                 .document()
                 .set(note);
     }
+
+    public void initializeMusic(){
+        Map<String, String[]> musicPlaylist = new HashMap<>();
+        musicPlaylist.put("compound", new String[]{"", ""});
+        musicPlaylist.put("neu",  new String[]{"", ""});
+        musicPlaylist.put("pos",  new String[]{"", ""});
+        musicPlaylist.put("neg",  new String[]{"", ""});
+    }
+
 }

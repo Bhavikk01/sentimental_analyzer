@@ -16,7 +16,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".create_note"
+            android:name=".UserNotes"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
