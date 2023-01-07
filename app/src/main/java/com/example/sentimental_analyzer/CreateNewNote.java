@@ -26,6 +26,7 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final int[] size = {0};
         String userId = getIntent().getStringExtra("userId");
         String notesId = getIntent().getStringExtra("notesId") == null? "": getIntent().getStringExtra("notesId");
         String notes_Title = getIntent().getStringExtra("notesTitle") == null ? "" : getIntent().getStringExtra("notesTitle");
@@ -47,10 +48,13 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String[] arrOfStr = str.split("@", -2);
-
-                for (String a : arrOfStr)
-                    System.out.println(a);
+                String str = notesContent.getText().toString();
+                String[] arrOfStr = str.split("\\.", str.length());
+                if(size[0] < arrOfStr.length) {
+                    size[0] = arrOfStr.length;
+                    String s = arrOfStr[arrOfStr.length - 2];
+                    System.out.println(s);
+                }
             }
 
             @Override
