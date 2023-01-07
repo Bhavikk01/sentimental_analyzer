@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -37,6 +39,25 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         ImageView back = findViewById(R.id.back);
 
         notesContent.setText(notes_Content);
+        notesContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String[] arrOfStr = str.split("@", -2);
+
+                for (String a : arrOfStr)
+                    System.out.println(a);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         notesTitle.setText(notes_Title);
 
         back.setOnClickListener(view ->{
