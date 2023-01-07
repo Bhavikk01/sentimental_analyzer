@@ -1,5 +1,7 @@
 package com.example.sentimental_analyzer.models;
 
+import android.text.Editable;
+
 import com.google.type.DateTime;
 
 public class NotesModel {

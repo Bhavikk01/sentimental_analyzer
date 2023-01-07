@@ -62,16 +62,16 @@ public class FireStoreService{
         return list;
     }
 
-    public void putUserNote(NotesModel notes, String id){
+    public void putUserNote(NotesModel notes){
 
         Map<String, Object> note = new HashMap<>();
         note.put("notesTitle", notes.getNotesTitle());
         note.put("dateTime", notes.getDateTime());
         note.put("uid", notes.getUid());
         note.put("notesContent", notes.getNotesContent());
-
+        Log.d("TAG", "putUserNote: " + notes.getUid());
         db.collection("users")
-                .document(id)
+                .document(notes.getUid())
                 .collection("notes")
                 .document()
                 .set(note);

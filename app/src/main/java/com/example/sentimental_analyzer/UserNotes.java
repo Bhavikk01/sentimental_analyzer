@@ -24,22 +24,24 @@ public class UserNotes extends AppCompatActivity implements retrieveData {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_note);
         userId = getIntent().getStringExtra("userId");
-
-//        Button createNotesButton = findViewById(R.id.createNewNote);
-//        createNotesButton.setOnClickListener(view -> {
-//            Intent intent = Intent(this, NewNotes.class);
-//            startActivity(intent);
-//        });
+        setContentView(R.layout.activity_create_note);
 
         fireStoreService.getAllNotes(userId);
+
+        Button createNotesButton = findViewById(R.id.createNewNote);
+        createNotesButton.setOnClickListener(view -> {
+            Intent intent = new Intent(this, CreateNewNote.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        });
     }
 
     @Override
     public List<NotesModel> getUserNotes(List<NotesModel> list) {
         Log.d("TAG", "getUserNotes: This is the demo" + list.toString());
         userNotes.addAll(list);
+
         return null;
     }
 }
