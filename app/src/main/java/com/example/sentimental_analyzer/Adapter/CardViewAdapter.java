@@ -50,6 +50,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
             intent.putExtra("userId", data.get(position).getUid());
             intent.putExtra("notesContent", data.get(position).getNotesContent());
             intent.putExtra("notesTitle", data.get(position).getNotesTitle());
+            intent.putExtra("notesId", data.get(position).getId());
+            intent.putExtra("editable",true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });

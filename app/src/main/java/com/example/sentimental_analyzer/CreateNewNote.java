@@ -10,12 +10,14 @@ import android.widget.ImageView;
 import com.example.sentimental_analyzer.firestore_sefrvices.FireStoreService;
 import com.example.sentimental_analyzer.firestore_sefrvices.retrieveData;
 import com.example.sentimental_analyzer.models.NotesModel;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.type.DateTime;
 
 import java.util.List;
 
 public class CreateNewNote extends AppCompatActivity implements retrieveData {
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     FireStoreService fireStoreService = new FireStoreService(this);
 
     @Override
@@ -23,8 +25,10 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         super.onCreate(savedInstanceState);
 
         String userId = getIntent().getStringExtra("userId");
+        String notesId = getIntent().getStringExtra("notesId") == null? "": getIntent().getStringExtra("notesId");
         String notes_Title = getIntent().getStringExtra("notesTitle") == null ? "" : getIntent().getStringExtra("notesTitle");
         String notes_Content = getIntent().getStringExtra("notesContent") == null ? "" : getIntent().getStringExtra("notesContent");
+        Boolean editable = getIntent().getBooleanExtra("editable", false);
 
         setContentView(R.layout.activity_create_new_note);
         EditText notesTitle = findViewById(R.id.notesTitle);
@@ -43,14 +47,30 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
 
         save.setOnClickListener(view ->{
 
-            fireStoreService.putUserNote(
-                    new NotesModel(
-                            notesTitle.getText().toString(),
-                            userId,
-                            notesContent.getText().toString(),
-                            DateTime.getDefaultInstance().getHours() + ":" +DateTime.getDefaultInstance().getMinutes()
-                    )
-            );
+            String Id = db.collection("users")
+                    .document()
+                    .getId();
+            if(editable){
+                fireStoreService.updateUserNotes(
+                        new NotesModel(
+                                notesId,
+                                notesTitle.getText().toString(),
+                                userId,
+                                notesContent.getText().toString(),
+                                DateTime.getDefaultInstance().getHours() + ":" +DateTime.getDefaultInstance().getMinutes()
+                        )
+                );
+            }else{
+                fireStoreService.putUserNote(
+                        new NotesModel(
+                                Id,
+                                notesTitle.getText().toString(),
+                                userId,
+                                notesContent.getText().toString(),
+                                DateTime.getDefaultInstance().getHours() + ":" +DateTime.getDefaultInstance().getMinutes()
+                        )
+                );
+            }
             Intent intent = new Intent(this, UserNotes.class);
             startActivity(intent);
             finish();

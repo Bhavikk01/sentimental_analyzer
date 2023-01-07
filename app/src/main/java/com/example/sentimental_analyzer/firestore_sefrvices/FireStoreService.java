@@ -48,6 +48,7 @@ public class FireStoreService{
                             Map<String, Object> notes = document.getData();
                             Log.d("Notes", "getAllNotes: " + notes);
                             list.add(new NotesModel(
+                                    (String) notes.get("id"),
                                     (String) notes.get("notesTitle"),
                                     (String) notes.get("uid"),
                                     (String) notes.get("notesContent"),
@@ -63,6 +64,7 @@ public class FireStoreService{
     public void putUserNote(NotesModel notes){
 
         Map<String, Object> note = new HashMap<>();
+        note.put("id", notes.getId());
         note.put("notesTitle", notes.getNotesTitle());
         note.put("dateTime", notes.getDateTime());
         note.put("uid", notes.getUid());
@@ -71,8 +73,24 @@ public class FireStoreService{
         db.collection("users")
                 .document(notes.getUid())
                 .collection("notes")
-                .document()
+                .document(notes.getId())
                 .set(note);
+    }
+
+    public void updateUserNotes(NotesModel notes){
+
+        Map<String, Object> note = new HashMap<>();
+        Log.d("TAG", "putUserNote: This is the updateFunc" + notes.getId());
+        note.put("id", notes.getId());
+        note.put("notesTitle", notes.getNotesTitle());
+        note.put("dateTime", notes.getDateTime());
+        note.put("uid", notes.getUid());
+        note.put("notesContent", notes.getNotesContent());
+        db.collection("users")
+                .document(notes.getUid())
+                .collection("notes")
+                .document(notes.getId())
+                .update(note);
     }
 
     public void initializeMusic(){
