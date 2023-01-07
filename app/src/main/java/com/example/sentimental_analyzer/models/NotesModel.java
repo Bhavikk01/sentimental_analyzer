@@ -1,9 +1,5 @@
 package com.example.sentimental_analyzer.models;
 
-import android.text.Editable;
-
-import com.google.type.DateTime;
-
 public class NotesModel {
     private final String notesTitle;
     private final String dateTime;
@@ -22,7 +18,7 @@ public class NotesModel {
     }
 
     public String getDateTime() {
-        return DateTime.getDefaultInstance().toString();
+        return dateTime;
     }
 
     public String getUid() {

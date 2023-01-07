@@ -10,6 +10,7 @@
     >
 
     <LinearLayout
+        android:id="@+id/note"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/card_notion_background"
@@ -17,6 +18,7 @@
         >
 
         <TextView
+            android:id="@+id/notion_textview"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:text="@string/diary"
@@ -24,6 +26,7 @@
             android:textColor="@color/black"/>
 
         <TextView
+            android:id="@+id/time_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="10:13 PM"

@@ -7,6 +7,7 @@ import com.example.sentimental_analyzer.models.NotesModel;
 import com.example.sentimental_analyzer.models.UserModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.type.DateTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class FireStoreService{
 
     public void getAllNotes(String uid){
         db.collection("users")
-                .document("jkWgvyU5TsMnJwlv9sVQ")
+                .document(uid)
                 .collection("notes")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -48,9 +49,9 @@ public class FireStoreService{
                             Log.d("Notes", "getAllNotes: " + notes);
                             list.add(new NotesModel(
                                     (String) notes.get("notesTitle"),
-                                    (String) notes.get("dateTime"),
                                     (String) notes.get("uid"),
-                                    (String) notes.get("notesContent")
+                                    (String) notes.get("notesContent"),
+                                    (String) notes.get("dateTime")
                             ));
                         }
                         getData.getUserNotes(list);
@@ -58,9 +59,6 @@ public class FireStoreService{
                 });
     }
 
-    public List<NotesModel> getList() {
-        return list;
-    }
 
     public void putUserNote(NotesModel notes){
 

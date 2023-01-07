@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -24,11 +23,17 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         super.onCreate(savedInstanceState);
 
         String userId = getIntent().getStringExtra("userId");
+        String notes_Title = getIntent().getStringExtra("notesTitle") == null ? "" : getIntent().getStringExtra("notesTitle");
+        String notes_Content = getIntent().getStringExtra("notesContent") == null ? "" : getIntent().getStringExtra("notesContent");
+
         setContentView(R.layout.activity_create_new_note);
         EditText notesTitle = findViewById(R.id.notesTitle);
         EditText notesContent = findViewById(R.id.notesContent);
         ImageView save = findViewById(R.id.save);
         ImageView back = findViewById(R.id.back);
+
+        notesContent.setText(notes_Content);
+        notesTitle.setText(notes_Title);
 
         back.setOnClickListener(view ->{
             Intent intent = new Intent(this, UserNotes.class);
@@ -37,12 +42,13 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         });
 
         save.setOnClickListener(view ->{
+
             fireStoreService.putUserNote(
                     new NotesModel(
                             notesTitle.getText().toString(),
                             userId,
                             notesContent.getText().toString(),
-                            DateTime.getDefaultInstance().toString()
+                            DateTime.getDefaultInstance().getHours() + ":" +DateTime.getDefaultInstance().getMinutes()
                     )
             );
             Intent intent = new Intent(this, UserNotes.class);
