@@ -44,6 +44,7 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final int[] size = {0};
         String userId = getIntent().getStringExtra("userId");
         String notesId = getIntent().getStringExtra("notesId") == null? "": getIntent().getStringExtra("notesId");
         String notes_Title = getIntent().getStringExtra("notesTitle") == null ? "" : getIntent().getStringExtra("notesTitle");
@@ -56,40 +57,21 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         ImageView save = findViewById(R.id.save);
         ImageView back = findViewById(R.id.back);
 
-        prev_btn = findViewById(R.id.previous_button);
-        play_btn = findViewById(R.id.play_button);
-        next_btn = findViewById(R.id.next_button);
-        pause_btn = findViewById(R.id.pause_button);
+        prev_btn = findViewById(R.id.previousButton);
+        play_btn = findViewById(R.id.playButton);
+        next_btn = findViewById(R.id.nextButton);
+        pause_btn = findViewById(R.id.pauseButton);
 
 
         // creating a map
         creatingMap();
-
-
-
-
 
         // ML CODE
 
         ml_model = new ML_MODEL(this);
         ml_model.predict("I am happy!");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //        runMediaPLayer();
-
-
 
         // Creating a object
         MediaPlayer mediaPlayer = new MediaPlayer();
@@ -135,9 +117,6 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
             }
         });
 
-
-
-
         next_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,34 +160,6 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         notesContent.setText(notes_Content);
         notesContent.addTextChangedListener(new TextWatcher() {
             @Override
@@ -218,10 +169,18 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                String[] arrOfStr = str.split("@", -2);
-
-//                for (String a : arrOfStr)
-//                    System.out.println(a);
+                String str = notesContent.getText().toString();
+                String[] arrOfStr = str.split("\\.", str.length());
+                if (size[0] < arrOfStr.length) {
+                    size[0] = arrOfStr.length;
+                    if(str.length() >= 2){
+                        String s = arrOfStr[arrOfStr.length - 2];
+                    System.out.println(s);
+                    }else{
+                        String s = arrOfStr[arrOfStr.length - 1];
+                    System.out.println(s);
+                    }
+                }
             }
 
             @Override
@@ -271,15 +230,12 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
 
     private void creatingMap() {
 
-
         musicPlaylist.put("neu",  new String[]{"neu1", "neu2","neu3"});
         musicPlaylist.put("pos",  new String[]{"happy1", "happy2","happy3"});
         musicPlaylist.put("neg",  new String[]{"sad1","sad2","sad3"});
     }
 
     private void runMediaPLayer() {
-
-
 
     }
 
