@@ -84,7 +84,7 @@
 
 
         <Button
-            android:id="@+id/previousButton"
+            android:id="@+id/previous_button"
             android:layout_width="50dp"
             android:layout_height="70dp"
             android:backgroundTint="@color/button_color"
@@ -95,7 +95,7 @@
 
 
         <Button
-            android:id="@+id/playButton"
+            android:id="@+id/play_button"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:backgroundTint="@color/button_color"
@@ -107,7 +107,7 @@
 
             />
         <Button
-            android:id="@+id/pauseButton"
+            android:id="@+id/pause_button"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:backgroundTint="@color/button_color"
@@ -121,7 +121,7 @@
 
         <Button
 
-            android:id="@+id/nextButton"
+            android:id="@+id/next_button"
             android:layout_width="50dp"
             android:layout_height="70dp"
             android:backgroundTint="@color/button_color"

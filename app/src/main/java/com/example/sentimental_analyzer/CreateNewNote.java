@@ -1,5 +1,6 @@
 package com.example.sentimental_analyzer;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -36,6 +37,8 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
 
     int cnt = 1;
 
+    String prediction = "happy";
+
     ML_MODEL ml_model;
     Map<String, String[]> musicPlaylist = new HashMap<>();
 
@@ -57,10 +60,10 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         ImageView save = findViewById(R.id.save);
         ImageView back = findViewById(R.id.back);
 
-        prev_btn = findViewById(R.id.previousButton);
-        play_btn = findViewById(R.id.playButton);
-        next_btn = findViewById(R.id.nextButton);
-        pause_btn = findViewById(R.id.pauseButton);
+        prev_btn = findViewById(R.id.previous_button);
+        play_btn = findViewById(R.id.play_button);
+        next_btn = findViewById(R.id.next_button);
+        pause_btn = findViewById(R.id.pause_button);
 
 
         // creating a map
@@ -69,7 +72,7 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         // ML CODE
 
         ml_model = new ML_MODEL(this);
-        ml_model.predict("I am happy!");
+//        ml_model.predict("I am so disappointed with the way things turned between us. I was living in darkness, and everything had changed when you entered my life. Now that we are not together anymore, I feel like sadness is taking over my life.");
 
 //        runMediaPLayer();
 
@@ -107,6 +110,7 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
         play_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 
                 mediaPlayer.start();
 
@@ -175,10 +179,50 @@ public class CreateNewNote extends AppCompatActivity implements retrieveData {
                     size[0] = arrOfStr.length;
                     if(str.length() >= 2){
                         String s = arrOfStr[arrOfStr.length - 2];
-                    System.out.println(s);
+//                    System.out.println(s);
+                        ml_model.predict(s);
+                        prediction = ml_model.prediction;
+
+
+                        // path to that album
+                        String sentiment_path ="android.resource://" + CreateNewNote.this.getPackageName()+"/raw/"+prediction+"1";
+
+                        mediaPlayer.reset();
+
+                        Uri new_uri = Uri.parse(sentiment_path);
+
+                        try {
+                            mediaPlayer.setDataSource(CreateNewNote.this,new_uri);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
                     }else{
                         String s = arrOfStr[arrOfStr.length - 1];
-                    System.out.println(s);
+//                    System.out.println(s);
+                        ml_model.predict(s);
+
+                        prediction = ml_model.prediction;
+
+
+                        // path to that album
+                        String sentiment_path ="android.resource://" + CreateNewNote.this.getPackageName()+"/raw/"+prediction+"1";
+
+                        mediaPlayer.reset();
+
+                        Uri new_uri = Uri.parse(sentiment_path);
+
+                        try {
+                            mediaPlayer.setDataSource(CreateNewNote.this,new_uri);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
             }

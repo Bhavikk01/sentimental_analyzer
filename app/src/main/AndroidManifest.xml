@@ -26,6 +26,7 @@
             </intent-filter>
 
 
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -40,7 +41,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="false">
-
 
             <meta-data
                 android:name="android.app.lib_name"

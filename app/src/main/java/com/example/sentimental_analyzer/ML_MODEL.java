@@ -18,22 +18,45 @@ import org.json.JSONObject;
 import java.io.PipedOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ML_MODEL {
 
 
+    public String prediction;
+
     Context context;
+    private String getMeMax(Double positive, Double negative, Double neutral) {
+
+        if (Objects.equals(positive, negative) && Objects.equals(negative, neutral)) {
+            return "neu";
+        }
+
+        if (positive > negative && positive > neutral) {
+            return "happy";
+        }
+
+        if (negative > positive && negative > neutral) {
+            return "sad";
+        }
+        if (neutral > positive && neutral > negative) {
+            return "neu";
+        }
+        return "okays";
+
+    }
+
 
     public ML_MODEL(Context context) {
         this.context = context;
     }
 
-    public void predict(String data)
-    {
+    public void predict(String data) {
 
-        Log.d("PREDICT_UPDATE","aur kya bhdve"+data);
+//        Log.d("PREDICT_UPDATE", "aur kya bhdve" + data);
 
-        String url = "http://192.168.1.16:5000/predict";
+
+        String url = "http://192.168.1.6:5000/predict";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -42,10 +65,12 @@ public class ML_MODEL {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             Double positive = jsonObject.getDouble("pos");
-                            Double negative= jsonObject.getDouble("neg");
+                            Double negative = jsonObject.getDouble("neg");
                             Double neutral = jsonObject.getDouble("neu");
 
-                            Log.d("PREDICT_UPDATE",""+ positive+" "+negative+" "+neutral);
+                            prediction = getMeMax(positive, negative, neutral);
+
+                            Log.d("PREDICT_UPDATE", prediction);
 
 
 //                            Object d = jsonObject.get("neg");
@@ -58,7 +83,7 @@ public class ML_MODEL {
                         } catch (Exception e) {
 
 //                            textView.setText(e.getLocalizedMessage());
-                            Log.d("PREDICT_UPDATE",e.getLocalizedMessage());
+                            Log.d("PREDICT_UPDATE", e.getLocalizedMessage());
 
                             e.printStackTrace();
 
@@ -77,7 +102,7 @@ public class ML_MODEL {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("name",data);
+                map.put("name", data);
 
                 return map;
 
@@ -87,8 +112,15 @@ public class ML_MODEL {
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(stringRequest);
 
+
+
     }
 
 
 
-}
+
+
+    }
+
+
+
